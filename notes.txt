@@ -1,0 +1,43 @@
+
+// First Route
+
+app.use(async ctx => {
+  ctx.body = 'Hello World';
+});
+
+***************
+
+CTX
+We are using ctx as an argument to the asynchronous middleware
+function.It is called Context in Koa and it encapsulates request 
+and response objects into a single object. Unlike ExpressJS, that 
+requires request and response as separate objects passed as arguments.
+
+In Koa, a context is created for every request that comes to the server 
+and is always referenced as a middleware.
+
+***************
+
+What are these dependencies for?
+
+koa-body
+koa-body is a body-parser middleware. It supports urlencoded, 
+multi-part and json request bodies. Basically, it helps to 
+create and respond to HTTP POST requests which are available as a 
+form field, or a file upload, etc. It tells the server that the 
+incoming request from the client has a body of data. ExpressJS uses 
+the same approach in handling body requests.
+
+koa-router
+koa-router is the routing middleware that provides ExpressJS style 
+routing using HTTP verbs. It has methods that you can directly use 
+in the application Such as app.get(), app.post(), etc.
+
+****************
+
+next
+The callback function attached to the router.get() contains two arguments. 
+I have already explained to you what ctx or context is. The last argument 
+is next(). This is often used in middleware functions. Any middleware function 
+invokes this function to indicate the current middleware function has suspended 
+running and the next middleware function available must be invoked.
