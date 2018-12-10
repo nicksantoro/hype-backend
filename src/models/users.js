@@ -1,6 +1,12 @@
 // if there is no result send an error, if there is a result that looks send to controller
 // handles the logic attaches the error
 
+// fat models / skinny controllers
+
+const bcrypt = require("bcryptjs")
+const jwt = require('jsonwebtoken')
+
+
 const userQuery = require('../../queries/users');
 
 const getAllUsers = () => {
@@ -9,8 +15,11 @@ const getAllUsers = () => {
 }
 
 const createUser = (payload) => {
+  payload.hash_password = bcrypt.hashSync(payload.hash_password, 10)
+  // $2a$10$YgH4ph6n.0a.BMowndQQxeZn0jbbEGH45oXmUG9OzpFSH/9mN8Rc2
   const user = userQuery.createUser(payload);
-  return content.then(result => (!result ? { error: 'error creating user', status: 500 } : result))
+  // if user has been created, generate a token and respond with a token. result should be token, or user and token if included
+  return user.then(result => (!result ? { error: 'error creating user', status: 500 } : result))
 }
 
 const deleteUser = (userId) => {
@@ -20,8 +29,12 @@ const deleteUser = (userId) => {
 
 const getUserById = (userId) => {
   const user = userQuery.getUserById(userId);
-
   return user.then(result => (!result ? { error: 'error retrieving user', status: 500 } : result))
+}
+
+const getUserByEmail = async (email) => {
+  console.log("get user by email was called", email)
+  return userQuery.getUserByEmail(email);
 }
 
 const updateUserById = (id, payload) => {
@@ -41,10 +54,34 @@ const deleteFollowers = (followerId, followeeId) => {
   return user.then(result => (!result ? { error: 'error deleting follower', status: 500 } : result))
 }
 
-const login = (email, password) => {
-  const user = userQuery.login(email, password);
-  return user.then(result => (!result ? { error: 'error deleting follower', status: 500 } : result));
+const getLikes = (id) => {
+  const user = userQuery.getLikes(id);
+
+  return user.then(result => (!result ? { error: 'error retrieving likes', status: 500 } : result))
 }
+
+const login = async (email, password) => {
+
+  const user = await userQuery.login(email);
+
+  if (!user) throw new Error("could not find user")
+  console.log("USER", user, password)
+  const isValid = user.hash_password === password
+  // check if isValid, if true generate a token
+
+  // if false return the error
+
+  if (!isValid) {
+    throw new Error("password not valid")
+  }
+
+  return user;
+
+  // how am i going to use these tokens
+  // with id ?
+};
+
+
 
 module.exports = {
   getAllUsers,
@@ -54,5 +91,7 @@ module.exports = {
   updateUserById,
   getFollowers,
   deleteFollowers,
-  login
+  login,
+  getLikes,
+  getUserByEmail
 }

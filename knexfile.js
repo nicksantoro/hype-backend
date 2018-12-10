@@ -5,27 +5,27 @@ const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD } = require('./env');
 
 module.exports = {
 
-  // development: {
-  //   client: 'pg',
-  //   connection: {
-  //     host: PGHOST,
-  //     database: PGDATABASE,
-  //     user: PGUSER,
-  //     password: PGPASSWORD
-  //   },
-  //   migrations: { directory: './db/migrations' },
-  //   seeds: { directory: './db/seeds' }
-  // },
-
   development: {
     client: 'pg',
     connection: {
       host: PGHOST,
-      database: PGDATABASE
+      database: PGDATABASE,
+      user: PGUSER,
+      password: PGPASSWORD
     },
     migrations: { directory: './db/migrations' },
     seeds: { directory: './db/seeds' }
   },
+
+  // development: {
+  //   client: 'pg',
+  //   connection: {
+  //     host: PGHOST,
+  //     database: PGDATABASE
+  //   },
+  //   migrations: { directory: './db/migrations' },
+  //   seeds: { directory: './db/seeds' }
+  // },
 
 
   production: {

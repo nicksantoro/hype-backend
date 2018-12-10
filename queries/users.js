@@ -22,10 +22,15 @@ const deleteUser = (userId) => {
 const getUserById = (userId) => {
   return knex('users')
     // .select(["title", "body", "type"])
-    .where('id', userId)
+    .where('id', userId).first()
     .then(result => {
       return result;
     })
+}
+
+const getUserByEmail = async (email) => {
+  return knex('users')
+    .where('email', email).first()
 }
 
 const updateUserById = (id, payload) => {
@@ -48,11 +53,17 @@ const deleteFollowers = (followerId, followeeId) => {
     .where('followee_id', followeeId)
 }
 
-const login = (email, password) => {
-  console.log(email, password);
+const getLikes = (id) => {
+  return knex('likes')
+    .where('likes.users_id', id)
+    .join('events', 'events.id', '=', 'likes.events_id')
+  // join users where users.id equals the friendships table follower id
+}
+
+const login = (email) => {
   return knex('users')
     .where('email', email)
-    .where('password', password)
+    .first()
 }
 
 module.exports = {
@@ -63,5 +74,7 @@ module.exports = {
   updateUserById,
   getFollowers,
   deleteFollowers,
-  login
+  login,
+  getLikes,
+  getUserByEmail
 }

@@ -13,13 +13,13 @@ exports.seed = function (knex, Promise) {
         },
         {
           id: 2,
-          users_id: 2,
-          events_id: 1,
+          users_id: 1,
+          events_id: 2,
           quantity: 3
         },
         {
           id: 3,
-          users_id: 2,
+          users_id: 1,
           events_id: 3,
           quantity: 3
         },
