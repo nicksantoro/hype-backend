@@ -44,6 +44,7 @@ passport.deserializeUser(async function (id, done) {
   try {
     const user = await User.findById(id)
     console.log("success", user)
+    res.status(200).json(user)
     done(null, user)
   }
   catch (e) {

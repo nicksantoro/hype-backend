@@ -17,7 +17,7 @@ router.put('/:id', ctrl.updateUserById);
 
 router.delete('/:id/followers', ctrl.deleteFollowers);
 
-router.post('/login', passport.authenticate('local'), ctrl.login);
+router.post('/login', ctrl.login);
 
 
 module.exports = router;

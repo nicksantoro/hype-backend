@@ -1,6 +1,9 @@
 // controller is this or is this bad, send through if good, send error if not
+const jwt = require('jsonwebtoken')
 
 const model = require('../models/users');
+
+
 
 const getAllUsers = (req, res, next) => {
   const promise = model.getAllUsers();
@@ -81,9 +84,23 @@ const deleteFollowers = (req, res, next) => {
 }
 
 const login = async (req, res, next) => {
-
-  return res.status(200).json(req.user);
-
+  let { password, email } = req.body
+  console.log(req.body, "in the controller")
+  let user = await model.getUserByEmail(email);
+  if (!user) return res.status(404).json({ status: 404, message: "user email or password is invalid" })
+  if (user.hash_password == password) {
+    const timeIssued = Math.floor(Date.now() / 1000)
+    const timeExpires = timeIssued + 86400 * 28
+    let token = await jwt.sign({
+      iss: 'auth_test',
+      aud: 'auth_test',
+      iat: timeIssued,
+      exp: timeExpires,
+      identity: user.id
+    }, "secret")
+    return res.status(200).set({ authorization: token }).json(user)
+  }
+  return res.status(404).json({ status: 404, message: "user email or password is invalid" })
 }
 
 //val user
